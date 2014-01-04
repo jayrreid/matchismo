@@ -13,6 +13,26 @@
 
 @synthesize suit = _suit;
 
+- (int)match:(NSArray *)otherCards
+{
+    int score = 0;
+    
+    if ([otherCards count] == 1) {
+        
+        // firstObject returns [array objectAtIndex:0] except that it
+        // will not crash if the array is empty, it will return nil
+        PlayingCard *otherCard = [otherCards firstObject];
+        if (otherCard.rank == self.rank) {
+            score = 4;
+        } else if ([otherCard.suit isEqualToString:self.suit]) {
+            score = 1;
+        }
+    }
+    
+    return score;
+}
+
+
 + (NSArray *)validSuits
 {
     return @[@"♠️",@"♣️", @"❤️",@"♦️"];
