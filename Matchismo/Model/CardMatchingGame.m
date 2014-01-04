@@ -25,7 +25,7 @@ static const int COST_TO_CHANGE = 1;
     return _cards;
 }
 
-- (instancetype)initWithCard:(NSUInteger)count
+- (instancetype)initWithCardCount:(NSUInteger)count
                    usingDeck:(Deck *)deck
 {
     self = [super init]; //super's (NSObject) designated initializer
