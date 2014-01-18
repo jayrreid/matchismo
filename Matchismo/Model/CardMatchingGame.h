@@ -20,9 +20,12 @@
 - (void)chooseCardAtIndex:(NSUInteger)index;
 - (Card *)cardAtIndex:(NSUInteger)index;
 
+
 // Readonly public method. It's overridden implementation
 // so it can be set privately. Readonly means there is
 // no setter (only a getter)
 @property (nonatomic, readonly) NSInteger score;
+
+@property (nonatomic, strong) NSMutableArray *matchHistory; // of NSString
 
 @end

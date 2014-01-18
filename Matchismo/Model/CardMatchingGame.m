@@ -25,6 +25,11 @@ static const int COST_TO_CHANGE = 1;
     return _cards;
 }
 
+- (NSMutableArray *) matchHistory {
+    if(!_matchHistory) _matchHistory= [[NSMutableArray alloc] init];
+    return _matchHistory;
+}
+
 - (instancetype)initWithCardCount:(NSUInteger)count
                    usingDeck:(Deck *)deck
 {
@@ -41,6 +46,9 @@ static const int COST_TO_CHANGE = 1;
                 break;
             }
         }
+        
+        // set score to zero
+        self.score = 0;
     }
     
     return self;
@@ -55,8 +63,12 @@ static const int COST_TO_CHANGE = 1;
 - (void)chooseCardAtIndex:(NSUInteger)index
 {
     Card *card = [self cardAtIndex:index];
+    NSString *matchResults;
     
     if (!card.isMatched) {
+        
+        matchResults=[NSString stringWithFormat:@"%@",card.contents];
+        
         if(card.isChosen) {
             card.chosen = NO;
         } else {
@@ -69,9 +81,15 @@ static const int COST_TO_CHANGE = 1;
                         otherCard.matched = YES;
                         card.matched = YES;
                         
+                        // add match results to match history
+                        matchResults=[NSString stringWithFormat:@"%@ %@ %@ %@ %d %@",otherCard.contents,card.contents,@"Matched",@"for",(matchScore * MATCH_BONUS),@"points"];
+                        
                     } else {
                         self.score -=MISMATCH_PENALTY;
                         otherCard.chosen = NO;
+                        
+                        // add match results to match history
+                        matchResults=[NSString stringWithFormat:@"%@ %@ %@ %d %@",otherCard.contents,card.contents,@" Don't Match!",MISMATCH_PENALTY,@" penalty points"];
                     }
                     break; // can only choose 2 cards for now
                 }
@@ -79,7 +97,13 @@ static const int COST_TO_CHANGE = 1;
             self.score -= COST_TO_CHANGE;
             card.chosen = YES;
         }
+        // add results to match history
+        [self.matchHistory addObject:matchResults];
+        
     }
+    
+    
 }
+
 
 @end
