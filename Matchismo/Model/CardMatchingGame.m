@@ -11,6 +11,7 @@
 @interface CardMatchingGame()
 @property (nonatomic, readwrite) NSInteger score;
 @property (nonatomic, strong) NSMutableArray *cards; // of Card
+@property (nonatomic, readwrite) NSInteger gameMode;
 @end
 
 static const int MISMATCH_PENALTY = 2;
@@ -53,6 +54,17 @@ static const int COST_TO_CHANGE = 1;
     
     return self;
 }
+
+- (instancetype)initWithCardCountAndMode:(NSUInteger)count
+                        usingDeck:(Deck *)deck
+                         gameMode:(NSUInteger)mode {
+    
+    self = [self initWithCardCount:count usingDeck:deck];
+    self.gameMode = mode;
+    NSLog(@"Game Mode is: %d",self.gameMode);
+    return self;
+}
+
 
 - (Card *)cardAtIndex:(NSUInteger)index
 {

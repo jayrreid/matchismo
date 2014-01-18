@@ -17,6 +17,10 @@
 - (instancetype)initWithCardCount:(NSUInteger)count
                    usingDeck:(Deck *)deck;
 
+- (instancetype)initWithCardCountAndMode:(NSUInteger)count
+                        usingDeck:(Deck *)deck
+                         gameMode:(NSUInteger)mode;
+
 - (void)chooseCardAtIndex:(NSUInteger)index;
 - (Card *)cardAtIndex:(NSUInteger)index;
 

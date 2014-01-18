@@ -23,8 +23,11 @@
 
 - (CardMatchingGame *) game
 {
-        if(!_game) _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
-                                                               usingDeck:[self createDeck]];
+    
+    if(!_game) _game = [[CardMatchingGame alloc] initWithCardCountAndMode:[self.cardButtons count]
+                                                                usingDeck:[self createDeck]
+                                                                 gameMode:[self.gameMode selectedSegmentIndex]];
+    
     return _game;
 }
 
@@ -35,7 +38,6 @@
 
 - (IBAction)touchCardButton:(UIButton *)sender
 {
-    
     int chosenButtonIndex = [self.cardButtons indexOfObject:sender];
     [self.game chooseCardAtIndex:chosenButtonIndex];
     
@@ -51,8 +53,9 @@
 - (IBAction)dealCards:(id)sender {
     
     // reset game (includes reseting score to zero
-    _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
-                                              usingDeck:[self createDeck]];
+    _game = [[CardMatchingGame alloc] initWithCardCountAndMode:[self.cardButtons count]
+                                                     usingDeck:[self createDeck]
+                                                      gameMode:[self.gameMode selectedSegmentIndex]];
     
     // re-dealing cards to start new game
     // enable game mode selection
