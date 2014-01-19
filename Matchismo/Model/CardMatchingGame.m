@@ -84,6 +84,7 @@ static const int COST_TO_CHANGE = 1;
         if(card.isChosen) {
             card.chosen = NO;
         } else {
+
             // match against other chosen cards
             for (Card *otherCard in self.cards) {
                 if(otherCard.isChosen && !otherCard.isMatched) {
@@ -103,7 +104,9 @@ static const int COST_TO_CHANGE = 1;
                         // add match results to match history
                         matchResults=[NSString stringWithFormat:@"%@ %@ %@ %d %@",otherCard.contents,card.contents,@" Don't Match!",MISMATCH_PENALTY,@" penalty points"];
                     }
-                    break; // can only choose 2 cards for now
+                    NSLog(@"game mode is: %d: ",self.gameMode);
+                    if (self.gameMode == 0)
+                        break; // can only choose 2 cards for now
                 }
             }
             self.score -= COST_TO_CHANGE;
