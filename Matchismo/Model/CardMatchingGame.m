@@ -85,28 +85,45 @@ static const int COST_TO_CHANGE = 1;
             card.chosen = NO;
         } else {
 
-            // match against other chosen cards
+            
+            // match against other cards
+            
+            // First we store the cards that are chosen and not matched in currentChosenCards
+            NSMutableArray *currentChosenCards = [[NSMutableArray alloc] init];
+            NSMutableString *statusCurrentChosenCards = [[NSMutableString alloc] init];
+                                                          
             for (Card *otherCard in self.cards) {
-                if(otherCard.isChosen && !otherCard.isMatched) {
-                    int matchScore = [card match:@[otherCard]];
-                    if(matchScore) {
-                        self.score +=matchScore * MATCH_BONUS;
+                if (otherCard.isChosen && !otherCard.isMatched) {
+                    [currentChosenCards addObject:otherCard];
+                    [statusCurrentChosenCards appendFormat:@"%@ ", otherCard.contents];
+                }
+            }
+ 
+            
+            
+            // The model is already tracking how many cards are currently chosen and not matched
+            // So all we need to do is match that count with the number of cards we are playing with
+            // We do a -1 because currentChosenCards doesn't include the card that was just clicked
+            if ([currentChosenCards count] == self.gameMode-1) {
+                int matchScore = [card match:currentChosenCards];
+                if (matchScore) {
+                    self.score += matchScore * MATCH_BONUS;
+                    for (Card *otherCard in currentChosenCards) {
                         otherCard.matched = YES;
-                        card.matched = YES;
-                        
-                        // add match results to match history
-                        matchResults=[NSString stringWithFormat:@"%@ %@ %@ %@ %d %@",otherCard.contents,card.contents,@"Matched",@"for",(matchScore * MATCH_BONUS),@"points"];
-                        
-                    } else {
-                        self.score -=MISMATCH_PENALTY;
-                        otherCard.chosen = NO;
-                        
-                        // add match results to match history
-                        matchResults=[NSString stringWithFormat:@"%@ %@ %@ %d %@",otherCard.contents,card.contents,@" Don't Match!",MISMATCH_PENALTY,@" penalty points"];
                     }
-                    NSLog(@"game mode is: %d: ",self.gameMode);
-                    if (self.gameMode == 0)
-                        break; // can only choose 2 cards for now
+                    card.matched = YES;
+
+                    // add match results to match history
+                     matchResults=[[NSString stringWithFormat:@"Scored: %d. Match found for: %@ ", matchScore * MATCH_BONUS, card.contents] stringByAppendingString:statusCurrentChosenCards];
+                        
+                } else {
+                        self.score -=MISMATCH_PENALTY;
+                        for (Card *otherCard in currentChosenCards) {
+                            otherCard.chosen = NO;
+                        }
+
+                        // add match results to match history
+                        matchResults=[[NSString stringWithFormat:@"Penalty: %d. No match found for: %@ ", MISMATCH_PENALTY, card.contents] stringByAppendingString:statusCurrentChosenCards];
                 }
             }
             self.score -= COST_TO_CHANGE;

@@ -25,35 +25,29 @@
 
 - (IBAction)changeMatchHistory:(id)sender {
     
-    NSUInteger index = (NSUInteger)(self.matchResultsSlider.value + 0.5); // Round the number.
+    // Round the number
+    NSUInteger index = (NSUInteger)(self.matchResultsSlider.value + 0.5);
+    
     
     if (index >= [self.game.matchHistory count]) {
-        
-          NSLog(@"count: %i", [self.game.matchHistory count]);
+ 
         if([self.game.matchHistory count] == 0)
         {
-            self.matchResultsSlider.value = 0;
+            [self.matchResultsSlider setValue:0 animated:YES];
+            index = 0;
         } else {
-            
-           self.matchResultsSlider.value = [self.game.matchHistory count] - 1;
-            index = self.matchResultsSlider.value;
-  
+            index = [self.game.matchHistory count] - 1;
+            [self.matchResultsSlider setValue:index animated:YES];
         }
     }
-     NSLog(@"indexsddd: %i", index);
 
     if (index > 0)
     {
         // set match history label to slider value
-        [self.matchResultsSlider setValue:index animated:YES];
         NSString *matchHistory = [self.game.matchHistory objectAtIndex:index];
         self.matchResultsLabel.text = matchHistory;
 
     }
-    
-    //NSLog(@"index: %i", index);
-    //NSLog(@"match history: %@", matchHistory);
-    //NSLog(@"Slider Changed: %f",self.matchResultsSlider.value);
 }
 
 
@@ -136,7 +130,7 @@
     self.gameMode.enabled = YES;
     
     // reset match slider history
-    [self.matchResultsSlider setValue:[self.game.matchHistory count] animated:YES];
+    [self.matchResultsSlider setValue:0 animated:YES];
     
     // update UI
     [self updateUI];

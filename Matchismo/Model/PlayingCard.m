@@ -17,21 +17,41 @@
 {
     int score = 0;
     
-    if ([otherCards count] == 1) {
-        // firstObject returns [array objectAtIndex:0] except that it
-        // will not crash if the array is empty, it will return nil
+    for(PlayingCard *otherCard in otherCards) {
+    
         id card =[otherCards firstObject];
         if([card isKindOfClass:[PlayingCard class]])
         {
             PlayingCard *otherCard = (PlayingCard *) card;
             if (otherCard.rank == self.rank) {
-                score = 4;
+                score += 4;
             } else if ([otherCard.suit isEqualToString:self.suit]) {
-                score = 1;
+                score += 1;
             }
         }
     }
     
+    
+    /*
+     * Used for comparing the contents of otherCards to match against each other
+     * For Example: in 3 card match, let's assume
+     *      self.rank = J♠
+     *      otherCards = [4♦, 8♦]
+     * In the match test block above J♠ doesn't match either 4♦ or 8♦
+     * But 4♦ matches the suit of 8♦ - the following code block address that
+     */
+    NSMutableArray *otherCardsCollectionForComparison = [otherCards mutableCopy];
+    for (PlayingCard *otherCard in otherCards) {
+        [otherCardsCollectionForComparison removeObject:otherCard];
+        for (PlayingCard *otherCardInOtherCardsColleciton in otherCardsCollectionForComparison) {
+            if (otherCard.rank == otherCardInOtherCardsColleciton.rank) {
+                score += 4;
+            } else if ([otherCard.suit isEqualToString:otherCardInOtherCardsColleciton.suit]) {
+                score += 1;
+            }
+        }
+    }
+
     return score;
 }
 
